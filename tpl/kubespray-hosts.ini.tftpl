@@ -1,0 +1,27 @@
+[all]
+%{ for key, vm in vms ~}
+%{ if vm.hostname == "kube-master" ~}
+${vm.hostname} ansible_host=${vm.public_ip} ansible_user=ubuntu ip=${vm.private_ip} access_ip=${vm.private_ip}
+%{ else ~}
+${vm.hostname} ansible_host=${vm.private_ip} ansible_user=ubuntu ip=${vm.private_ip} access_ip=${vm.private_ip} ansible_ssh_private_key_file=~/.ssh/id_ed25519 ansible_ssh_common_args='-o ProxyJump=ubuntu@${vms["kube-master-1"].public_ip}'
+%{ endif ~}
+%{ endfor ~}
+
+[kube_control_plane]
+kube-master
+
+[etcd]
+kube-master
+
+[kube_node]
+%{ for key, vm in vms ~}
+%{ if vm.hostname != "kube-master" ~}
+${vm.hostname}
+%{ endif ~}
+%{ endfor ~}
+
+[k8s_cluster:children]
+kube_control_plane
+kube_node
+
+[calico_rr]
