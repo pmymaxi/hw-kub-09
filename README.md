@@ -25,5 +25,7 @@
 ```bash
 terraform -chdir=/hw-kub-09/terraform/vpc apply
 terraform -chdir=/hw-kub-09/terraform apply
-``` 
+```
+<img width="1838" height="307" alt="изображение" src="https://github.com/user-attachments/assets/47231c5a-0e70-427e-b500-0eb970d00462" />
+
 
